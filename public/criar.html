@@ -41,43 +41,43 @@
     </div>
     <div class="simulador">
         <div class="container">
-            <a id="segredo" href="criar.html" style="display: none;">cadastro de jogo</a>
-            <h3>jogos recentes</h3>
-            <div class="colunas" id="1"></div>
-            <div class="colunas" id="2"></div>
-            <div class="colunas" id="3"></div>
-            <div class="colunas" id="4"></div>
-            <div class="colunas" id="5"></div>
+            <p>nome</p>
+            <input type="text" id="nome">
+            <p>tag</p>
+            <input type="text" id="tags">
+            <p>imagem</p>
+            <input type="text" id="imagem">
+            <button onclick="cadastrar2()">Cadastrar</button>
         </div>
     </div>
 </body>
 
 </html>
 <script>
-window.onload = function () {
-    let idUsuario = sessionStorage.ID_USUARIO
-    if (idUsuario == 666) {
-        criar.style.display = "block"
-    }
-}
-window.onload = carregarJogos;
-function carregarJogos() {
-    fetch("/jogos/listar2")
-    .then(res => res.json())
-    .then(jogos => {
-        for (var i = 0; i < jogos.length; i++) {
-            for(var j =0; j<5; j++){
-            document.getElementById(j + 1).innerHTML = `
-                <img src="${jogos[j].imagem}" width="200px">
-                <h3>${jogos[i].nome}</h3>
-                <p><b>Tag:</b> ${jogos[j].tag}</p>
-            `
-            }
-        }
-    })
-    .catch(function(erro){
-        console.log(erro)
-    });
+    function cadastrar2() {
+        var nomeVar = nome.value;
+        var tagVar = tags.value;
+        var imagemVar = imagem.value;
+        var idUsuario = sessionStorage.ID_USUARIO;
+        fetch("/jogos/cadastrar2", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nomeServer: nomeVar,
+                tagServer: tagVar,
+                imagemServer: imagemVar,
+                idUsuarioServer: idUsuario
+            })
+        })
+            .then(function (resposta) {
+                if (resposta.ok) {
 
-}
+                    alert("Jogo cadastrado com sucesso!");
+                } else {
+                    alert("Erro ao cadastrar.");
+                }
+            });
+    }
 </script>

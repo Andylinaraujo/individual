@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AquaTech | Simulador</title>
+
+    <script src="./js/sessao.js"></script>
+
+    <link rel="stylesheet" href="./css/estilo.css">
+    <link rel="icon" href="./assets/icon/favicon2.ico">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!--header inicio-->
+    <div class="header">
+        <div class="container">
+            <h1 class="titulo">IGC</h1>
+            <ul class="navbar">
+                <li>
+                    <a href="./index.html">Inicial</a>
+                </li>
+                <li>
+                    <a href="simulador.html">Jogos</a>
+                </li>
+                <li class="agora">
+                    <a href="#">Gráficos</a>
+                </li>
+                <li>|</li>
+                <li>
+                    <a href="./login.html">Login</a>
+                </li>
+                <li>
+                    <a href="./login.html">Cadastro</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="simulador">
+        <div class="container">
+            <div class="kpis">
+                <div class="caixa">
+                    <h3>Total de Jogos</h3>
+                    <h2 id="Jogos">0</h2>
+                </div>
+                <div class="caixa">
+                    <h3>Filtrar por Tag</h3>
+                    <select id="select_tag" onchange="filtrar()">
+                        <option value="">Selecione uma tag</option>
+                    </select>
+                    <h2 id="Tag2">0</h2>
+                    <span>jogos encontrados</span>
+                </div>
+                <div class="caixa">
+                    <h3>Tag Mais Utilizada</h3>
+                    <h2 id="Porcentagem">0%</h2>
+                    <span id="nomeTag">-</span>
+                </div>
+            </div>
+            <div class="graficos">
+                <div class="caixa">
+                    <canvas id="graficoRosca"></canvas>
+                </div>
+                <div class="caixa">
+                    <canvas id="graficoBarra"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
+<script>
+var dashboard
+function dash() {
+    fetch("/dashboard")
+    .then(function(resposta){
+        return resposta.json()
+    })
+    .then(function(dados){
+        dashboard = dados
+        Jogos.innerHTML = dados.totaljogos
+        Porcentagem.innerHTML = dados.porcentagemtag + "%"
+        nomeTag.innerHTML = dados.tagmaisusada
+        for(var i = 0; i < dados.listatags.length; i++){
+            select_tag.innerHTML += `
+                <option value="${dados.listatags[i].nome}">
+                    ${dados.listatags[i].nome}
+                </option>
+            `
+        }
+        new Chart(graficoRosca,{
+            type:"doughnut",
+            data:{
+                labels:dados.tags,
+                datasets:[{
+                    data:dados.quantidadetags
+                }]
+            }
+        });
+        new Chart(graficoBarra,{
+            type:"bar",
+            data:{
+                labels:dados.jogos,
+                datasets:[{
+                    label:"Quantidade de Tags",
+                    data:dados.quantidadetogos
+                }]
+            },
+            options:{
+                indexAxis:"y"
+            }
+        });
+    });
+}
+function filtrar(){
+    var tag = select_tag.value
+    if(tag == ""){
+        Tag2.innerHTML = 0
+        return
+    }
+    for(var i = 0; i < dashboard.qtdtag.length; i++){
+        if(dashboard.qtdtag[i].nome == tag){
+            Tag2.innerHTML = dashboard.qtdtag[i].quantidade
+            break;
+        }
+    }
+}
+window.onload = dash
+</script>

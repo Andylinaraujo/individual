@@ -21,13 +21,16 @@
 
     <div class="header">
         <div class="container">
-            <h1 class="titulo">AquaTech</h1>
+            <h1 class="titulo">IGC</h1>
             <ul class="navbar">
                 <li>
                     <a href="index.html">Inicial</a>
                 </li>
                 <li>
-                    <a href="simulador.html">Simulador</a>
+                    <a href="simulador.html">Jogos</a>
+                </li>
+                <li>
+                    <a href="dashboard.html">Gráficos</a>
                 </li>
                 <li>|</li>
                 <li class="agora">
@@ -71,13 +74,6 @@
         </div>
     </div>
 
-    <!--footer inicio-->
-    <div class="footer">
-        <div class="container">
-            <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023-2026</h4>
-        </div>
-    </div>
-    <!--footer fim-->
 
 </body>
 
@@ -86,7 +82,7 @@
 <script>
 
 
-    function entrar() {
+        function entrar() {
         aguardar();
 
         var emailVar = email_input.value;
@@ -126,10 +122,9 @@
                     sessionStorage.EMAIL_USUARIO = json.email;
                     sessionStorage.NOME_USUARIO = json.nome;
                     sessionStorage.ID_USUARIO = json.id;
-                    sessionStorage.AQUARIOS = JSON.stringify(json.aquarios)
 
                     setTimeout(function () {
-                        window.location = "./dashboard/cards.html";
+                        window.location = "index.html";
                     }, 1000); // apenas para exibir o loading
 
                 });
@@ -154,5 +149,6 @@
     function sumirMensagem() {
         cardErro.style.display = "none"
     }
+
 
 </script>
